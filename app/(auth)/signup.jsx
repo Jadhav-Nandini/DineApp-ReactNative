@@ -75,33 +75,7 @@ const SignUp = () => {
                                 </View>
                             )}
                         </Formik>
-                        {/* <View className='text-center'>
-
-                            
-                            
-                            <TouchableOpacity
-                                className="flex flex-row items-center justify-center gap-2 my-2 p-3 "
-                                onPress={() => router.navigate('/signin')}>
-                                <Text className="text-white  font-semibold ">Already a User?</Text>
-                                <Text className="text-base font-semibold underline text-[#f49b33] ">Sign in</Text>
-                            </TouchableOpacity>
-
-                            <Text className="text-center text-base font-semibold my-6 text-white">
-              <View className="border-b-2 border-[#f49b33] p-2 mb-1 w-20" />    or{" "}
-              <View className="border-b-2 border-[#f49b33] p-2 mb-1 w-20" />
-            </Text>
-                            
-                        </View>
-
-
-                    </View>
-                    <View className="flex-1">
-                        <Image source={frame}
-                            className="w-full h-full"
-                            // style={{ width: '100%', height: 250 }}
-                            resizeMode="contain" />
-                    </View>
-                </View> */}
+                     
 
                         <View className="flex justify-center items-center">
                             <TouchableOpacity
