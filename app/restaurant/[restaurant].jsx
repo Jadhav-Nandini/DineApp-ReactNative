@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Dimensions, FlatList, Image, Linking, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DatePickerComponent from '../../components/restaurant/DatePickerComponent';
+import GuestPickerComponent from '../../components/restaurant/GuestPickerComponent';
 
 const Restaurant = () => {
     const { restaurant } = useLocalSearchParams();
@@ -17,6 +18,7 @@ const Restaurant = () => {
     const [carouselData, setCarouselData] = useState({})
     const [slotsData, setSlotsData] = useState({})
     const [date, setDate] = useState(new Date());
+    const [selectedNumber, setSelectedNumber] = useState(2)
 
     const handleNextImage = () => {
         const carouselLength = carouselData[0]?.images.length
@@ -263,19 +265,29 @@ const Restaurant = () => {
 
                     </Text>
                 </View>
-                <View className="m-2 flex-1 flex-row p-2  border-[#f49b33] items-center  rounded-lg ">
+                <View >
+
+
+                    <View className="m-2 flex-1 flex-row p-2  border-[#f49b33] items-center  rounded-lg ">
+                        <View className="flex-1 flex-row">
+                            <Ionicons name="calendar" size={20} color="#f49b33" />
+                            <Text className="text-white mx-2 text-lg">Select booking date</Text>
+                        </View>
+                        <DatePickerComponent date={date} setDate={setDate} />
+                    </View>
+
+
+
+                     <View className="m-2 flex-1 flex-row p-2  border-[#f49b33] items-center  rounded-lg ">
                     <View className="flex-1 flex-row">
                         <Ionicons name="calendar" size={20} color="#f49b33" />
-                        <Text className="text-white mx-2 text-lg">Select booking date</Text>
+                        <Text className="text-white mx-2 text-lg">Select number of guests</Text>
                     </View>
-                    <DatePickerComponent date={date} setDate={setDate} />
+                    <GuestPickerComponent selectedNumber={selectedNumber} setSelectedNumber={setSelectedNumber} />
+                </View>
                 </View>
             </ScrollView>
         </SafeAreaView>
     )
 }
-
 export default Restaurant
-
-
-
