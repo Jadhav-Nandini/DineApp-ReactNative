@@ -1,20 +1,17 @@
 import logo from '@/assets/images/dinetimelogo.png';
 import banner from '@/assets/images/homeBanner.png';
-import uploadData from '@/config/bulkupload';
-import restaurants from '@/store/restaurants';
+// import restaurants from '@/store/restaurants';
+import { db } from '@/config/firebaseConfig';
 import { BlurView } from 'expo-blur';
 import { useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import { collection, getDocs, query } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, ImageBackground, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Home = () => {
 
-  useEffect(() => {
-    uploadData();
-  }, [])
-  uploadData();
-  
+const Home = () => {
+  const [restaurants, setRestaurants] = useState([])
   const router = useRouter();
 
   const renderItem = ({ item }) => (
@@ -36,9 +33,22 @@ const Home = () => {
   );
 
 
+  const getRestaurants = async () => {
+    const q = query(collection(db, "restaurants"));
+    const res = await getDocs(q);
+
+    res.forEach((item) => {
+      setRestaurants((prev) => [...prev, item.data()]);
+    });
+  };
+  useEffect(() => {
+    getRestaurants();
+    // temp();
+  }, []);
+
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#2b2b2b", paddingBottom:80 }}>
+    <SafeAreaView style={{ backgroundColor: "#2b2b2b", paddingBottom: 80 }}>
       <View className='flex items-center'>
         <View className='bg-[#5f5f5f]  w-11/12  rounded-lg shadow-lg justify-between items-center flex flex-row '>
           <View className='flex flex-row '>
@@ -66,7 +76,7 @@ const Home = () => {
           <Text className='text-3xl text-white mr-2 font-semibold'> Special Discount %</Text>
         </View>
 
-      {restaurants.length > 0 ? (
+        {restaurants.length > 0 ? (
           <FlatList
             data={restaurants}
             renderItem={renderItem}
@@ -75,14 +85,14 @@ const Home = () => {
             showsHorizontalScrollIndicator={false}
             scrollEnabled={true}
           />
-        ): (<ActivityIndicator animating color={'#fb9b33'} />
-          )}
+        ) : (<ActivityIndicator animating color={'#fb9b33'} />
+        )}
 
-           <View className='p-4  bg-[#2b2b2b] flex-row items-center '>
+        <View className='p-4  bg-[#2b2b2b] flex-row items-center '>
           <Text className='text-3xl text-[#fb9b33] mr-2 font-semibold'> Our Restaurants</Text>
         </View>
 
-      {restaurants.length > 0 ? (
+        {restaurants.length > 0 ? (
           <FlatList
             data={restaurants}
             renderItem={renderItem}
@@ -91,8 +101,8 @@ const Home = () => {
             showsHorizontalScrollIndicator={false}
             scrollEnabled={true}
           />
-        ): (<ActivityIndicator animating color={'#fb9b33'} />
-          )}
+        ) : (<ActivityIndicator animating color={'#fb9b33'} />
+        )}
 
       </ScrollView>
 
@@ -102,3 +112,12 @@ const Home = () => {
 }
 
 export default Home
+
+
+
+
+
+
+
+
+// 3.4.40
