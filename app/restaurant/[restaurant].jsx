@@ -3,8 +3,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useLocalSearchParams } from 'expo-router';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useEffect, useRef, useState } from 'react';
-import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, FlatList, Image, Linking, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import DatePickerComponent from '../../components/restaurant/DatePickerComponent';
 
 const Restaurant = () => {
     const { restaurant } = useLocalSearchParams();
@@ -15,7 +16,7 @@ const Restaurant = () => {
     const [restaurantData, setRestaurantData] = useState({})
     const [carouselData, setCarouselData] = useState({})
     const [slotsData, setSlotsData] = useState({})
-
+    const [date, setDate] = useState(new Date());
 
     const handleNextImage = () => {
         const carouselLength = carouselData[0]?.images.length
@@ -49,66 +50,69 @@ const Restaurant = () => {
     }
 
 
-
     const carouselItem = ({ item }) => {
         return (
             <View style={{ width: windowWidth - 2 }} className="h-64 relative">
                 <View
                     style={{
                         position: 'absolute',
-                        top: '45%',
+                        top: '50%',
                         backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 50,
                         padding: 5,
                         zIndex: 10,
                         right: '6%'
                     }}>
 
-                    <Ionicons name="arrow-forward" size={24} color="white" onPress={handleNextImage} />
+                    <Ionicons
+                        name="arrow-forward"
+                        size={24}
+                        color="white"
+                        onPress={handleNextImage}
+                    />
                 </View>
 
                 <View
                     style={{
                         position: 'absolute',
-                        top: '45%',
+                        top: '51%',
                         backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 50,
                         padding: 5,
                         zIndex: 10,
                         left: '3%'
                     }}>
 
-                    <Ionicons name="arrow-back" size={24} color="white" onPress={handlePrevImage} />
+                    <Ionicons
+                        name="arrow-back"
+                        size={24}
+                        color="white"
+                        onPress={handlePrevImage}
+                    />
                 </View>
 
-                <View style={{
-                    position: 'absolute',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    left: '50%',
-                    transform: [{ translateX: -50 }],
-                    zIndex: 10,
-                    bottom: 15
-                }}>
-
+                <View
+                    style={{
+                        position: 'absolute',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        left: '50%',
+                        transform: [{ translateX: -50 }],
+                        zIndex: 10,
+                        bottom: 15
+                    }}>
 
                     {
-                        carouselData[0].images?.map((_,i)=>(
-                    <View key={i} className={`bg-white h-2 w-2  ${i==currentIndex&& 'h-3 w-3'} p-1 mx-1 rounded-full`}/>
-
-
+                        carouselData[0].images?.map((_, i) => (
+                            <View key={i} className={`bg-white h-2 w-2  ${i == currentIndex && 'h-3 w-3'} p-1 mx-1 rounded-full`} />
                         ))
                     }
-                    
-
-
 
                 </View>
 
-
-
-
-                <Image source={{ uri: item }}
+                <Image
+                    source={{ uri: item }}
+                    className="h-64"
                     style={{
                         opacity: 0.5,
                         backgroundColor: 'black',
@@ -116,9 +120,7 @@ const Restaurant = () => {
                         marginLeft: 5,
                         borderRadius: 25
                     }}
-                    className="h-64"
                 />
-
             </View>
         )
     }
@@ -181,6 +183,20 @@ const Restaurant = () => {
         }
     };
 
+
+    const handleLocation = async () => {
+        const url = "https://maps.app.goo.gl/f7QWnoemmUAwwMUo6"
+        const supported = await Linking.canOpenURL(url)
+        if (supported) {
+            await Linking.openURL(url)
+        } else {
+            console.log("Don't know how to open URL", url);
+
+        }
+    }
+
+
+
     useEffect(() => {
         getRestaurantData();
     }, [])
@@ -196,7 +212,9 @@ const Restaurant = () => {
 
             <ScrollView className='h-full'>
                 <View className='flex-1 my-3 p-3'>
-                    <Text className='text-2xl text-[#f49b33] mr-2 font-semibold'>{restaurant}</Text>
+                    <Text className='text-2xl text-[#f49b33] mr-2 font-semibold'>
+                        {restaurant}
+                    </Text>
                     <View className="border-b border-[#f49b33]" />
                 </View>
                 <View className='h-64 max-w-[98%] mx-2 rounded-[20px] '>
@@ -209,14 +227,55 @@ const Restaurant = () => {
                         showsHorizontalScrollIndicator={false}
                         style={{ borderRadius: 25 }}
                     />
+                </View>
+
+                <View className='flex-1 flex-row items-center gap-1 mt-3 p-3'>
+                    <Ionicons
+                        name="location-sharp"
+                        size={22}
+                        color="#f49b33"
+
+                    />
+
+                    <Text className='max-w-[68%] text-white '>
+
+                        {restaurantData?.address}  |{"  "}
+                        <Text
+                            className="underline flex items-center ml-1 text-[#f49b33]  italic font-semibold text-lg  "
+                            onPress={handleLocation}>
+                            Get Direction
+                        </Text>
+                    </Text>
 
                 </View>
-            </ScrollView>
 
+                <View className='flex-1 flex-row gap-1 items-center p-3'>
+                    <Ionicons
+                        name="time"
+                        size={20}
+                        color="#f49b33"
+
+                    />
+
+                    <Text className='max-w-[68%] font-semibold text-lg text-white '>
+
+                        {restaurantData?.opening} - {restaurantData?.closing}
+
+                    </Text>
+                </View>
+                <View className="m-2 flex-1 flex-row p-2  border-[#f49b33] items-center  rounded-lg ">
+                    <View className="flex-1 flex-row">
+                        <Ionicons name="calendar" size={20} color="#f49b33" />
+                        <Text className="text-white mx-2 text-lg">Select booking date</Text>
+                    </View>
+                    <DatePickerComponent date={date} setDate={setDate} />
+                </View>
+            </ScrollView>
         </SafeAreaView>
     )
 }
 
 export default Restaurant
 
-const styles = StyleSheet.create({})
+
+
