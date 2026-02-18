@@ -260,7 +260,6 @@ const Restaurant = () => {
                         name="time"
                         size={20}
                         color="#f49b33"
-
                     />
 
                     <Text className='max-w-[68%] font-semibold text-lg text-white '>
@@ -277,8 +276,6 @@ const Restaurant = () => {
                         </View>
                         <DatePickerComponent date={date} setDate={setDate} />
                     </View>
-
-
 
                     <View className="m-2 flex-1 flex-row p-2 bg-[#474747]  border-[#f49b33] items-center  rounded-lg ">
                         <View className="flex-1 flex-row">

@@ -22,7 +22,6 @@ const SignUp = () => {
         router.push('/home')
     }
 
-
     const handleSignup = async (values) => {
 
         try {
@@ -37,6 +36,7 @@ const SignUp = () => {
             })
 
             await AsyncStorage.setItem("userEmail", values.email)
+            await AsyncStorage.setItem("isGuest", "false")
             // console.log(user,AsyncStorage.getItem("userEmail"));
             router.push("/home")
 

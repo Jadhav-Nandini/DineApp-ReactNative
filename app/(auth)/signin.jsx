@@ -34,6 +34,7 @@ const SignUp = () => {
       if (userDoc.exists()) {
         console.log("User data:", userDoc.data());
         await AsyncStorage.setItem("userEmail", values.email)
+        await AsyncStorage.setItem("isGuest", "false")
         router.push("/home")
       }else{
         console.log("No suc Doc");
