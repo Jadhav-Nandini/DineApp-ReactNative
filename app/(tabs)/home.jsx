@@ -13,6 +13,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const Home = () => {
   const [restaurants, setRestaurants] = useState([])
   const router = useRouter();
+  // const temp = async () => {
+  //   const value = await AsyncStorage.getItem("userEmail");
+  //   console.log(value);
+    
+  // }
+  
 
   const renderItem = ({ item }) => (
     <TouchableOpacity

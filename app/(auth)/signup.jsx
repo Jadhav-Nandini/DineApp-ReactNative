@@ -1,17 +1,57 @@
 // import validationSchema from '@/utils/signupSchema'
 import validationSchema from '@/utils/authSchema'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useRouter } from 'expo-router'
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
+import { doc, getFirestore, setDoc } from 'firebase/firestore'
 import { Formik } from 'formik'
 import React from 'react'
-import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
 const logo = require('@/assets/images/dinetimelogo.png')
 const frame = require('@/assets/images/Frame.png')
 const SignUp = () => {
 
     const router = useRouter();
-    const handleSignup = () => {
+
+    const auth = getAuth();
+    const db = getFirestore()
+
+    const handleSignup = async (values) => {
+
+        try {
+            const userCredentials = await createUserWithEmailAndPassword(
+                auth, values.email, values.password
+            )
+            const user = userCredentials.user
+
+            await setDoc(doc(db, "users", user.uid), {
+                email: values.email,
+                createdAt: new Date()
+            })
+
+            await AsyncStorage.setItem("userEmail", values.email)
+            // console.log(user,AsyncStorage.getItem("userEmail"));
+            router.push("/home")
+            
+        } catch (error) {
+            console.log("Error white signup", error);
+            if(error.code==="auth/email-already-in-use"){
+                Alert.alert(
+                    "Signup Failed!",
+                    "This email address is already in use. Please use a different email.",
+                    [{text:"OK"}] 
+                )
+            } else {
+                Alert.alert(
+                    "Signup Error!",
+                    "An unexpected error occurred. Please try again later.",
+                    [{text:"OK"}] 
+                )
+            }
+            
+        }
+
     }
     // const handleGusest = () => {}
 
@@ -75,7 +115,7 @@ const SignUp = () => {
                                 </View>
                             )}
                         </Formik>
-                     
+
 
                         <View className="flex justify-center items-center">
                             <TouchableOpacity

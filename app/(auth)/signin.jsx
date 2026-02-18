@@ -1,8 +1,11 @@
 import validationSchema from '@/utils/authSchema'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useRouter } from 'expo-router'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
 import { Formik } from 'formik'
 import React from 'react'
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 const logo = require('@/assets/images/dinetimelogo.png')
@@ -10,9 +13,45 @@ const frame = require('@/assets/images/Frame.png')
 const SignUp = () => {
 
   const router = useRouter();
-  const handleSignin = () => {
 
+  const auth = getAuth();
+  const db = getFirestore()
+
+  const handleSignin = async (values) => {
+
+    try {
+      const userCredentials = await signInWithEmailAndPassword(
+        auth, values.email, values.password
+      )
+      const user = userCredentials.user
+      const userDoc = await getDoc(doc(db, "users", user.uid))
+
+      if (userDoc.exists()) {
+        console.log("User data:", userDoc.data());
+        await AsyncStorage.setItem("userEmail", values.email)
+        router.push("/home")
+      }else{
+        console.log("No suc Doc");
+      }
+    } catch (error) {
+      if (error.code === "auth/invalid-credential") {
+        Alert.alert(
+          "Signip Failed!",
+          "Incorrect password. Please try again.",
+          [
+            { text: "OK" },
+          ])
+      } else {
+        Alert.alert(
+          "Sign in Error!",
+          "An unexpected error occurred. Please try again later.",
+          [{ text: "OK" }]
+        )
+      }
+
+    }
   }
+
 
 
   return (
@@ -73,14 +112,14 @@ const SignUp = () => {
                 </View>
               )}
             </Formik>
-            
+
             <View className="flex justify-center items-center">
               <TouchableOpacity
                 className="flex flex-row justify-center mt-5 p-2 items-center"
                 onPress={() => router.push("/signup")}
               >
                 <Text className="text-white font-semibold">
-                New User?{" "}
+                  New User?{" "}
                 </Text>
                 <Text className="text-base font-semibold underline text-[#f49b33]">
                   Sign Up
