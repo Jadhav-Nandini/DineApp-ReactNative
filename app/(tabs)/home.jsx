@@ -2,6 +2,7 @@ import logo from '@/assets/images/dinetimelogo.png';
 import banner from '@/assets/images/homeBanner.png';
 // import restaurants from '@/store/restaurants';
 import { db } from '@/config/firebaseConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BlurView } from 'expo-blur';
 import { useRouter } from 'expo-router';
 import { collection, getDocs, query } from 'firebase/firestore';
@@ -13,11 +14,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const Home = () => {
   const [restaurants, setRestaurants] = useState([])
   const router = useRouter();
-  // const temp = async () => {
-  //   const value = await AsyncStorage.getItem("userEmail");
-  //   console.log(value);
+  const temp = async () => {
+    const value = await AsyncStorage.getItem("isGuest");
+    const email = await AsyncStorage.getItem("userEmail");
+    console.log(value, email);
     
-  // }
+  }
   
 
   const renderItem = ({ item }) => (
@@ -49,7 +51,7 @@ const Home = () => {
   };
   useEffect(() => {
     getRestaurants();
-    // temp();
+    temp();
   }, []);
 
 

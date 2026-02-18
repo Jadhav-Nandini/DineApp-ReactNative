@@ -1,4 +1,5 @@
 // import logo from '@/assets/images/Untitled_design__2_-removebg-preview.png';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,6 +12,11 @@ export default function Index() {
   const frame = require('@/assets/images/Frame.png')
 
   const router = useRouter();
+
+  const handleGuest = async () => {
+    await AsyncStorage.setItem("isGuest", "true")
+    router.push('/home')
+  }
 
   return (
 
@@ -32,7 +38,7 @@ export default function Index() {
 
             <TouchableOpacity
               className="p-3 my-3 bg-[#2b2b2b] border border-[#f49b33] rounded-lg"
-              onPress={() => router.push('/home')}
+              onPress={handleGuest}
             >
               <Text className="text-lg text-[#f49b33] font-semibold text-center ">Guest User</Text>
             </TouchableOpacity>

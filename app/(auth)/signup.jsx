@@ -17,6 +17,12 @@ const SignUp = () => {
     const auth = getAuth();
     const db = getFirestore()
 
+    const handleGuest = async () => {
+        await AsyncStorage.setItem("isGuest", "true")
+        router.push('/home')
+    }
+
+
     const handleSignup = async (values) => {
 
         try {
@@ -33,23 +39,23 @@ const SignUp = () => {
             await AsyncStorage.setItem("userEmail", values.email)
             // console.log(user,AsyncStorage.getItem("userEmail"));
             router.push("/home")
-            
+
         } catch (error) {
             console.log("Error white signup", error);
-            if(error.code==="auth/email-already-in-use"){
+            if (error.code === "auth/email-already-in-use") {
                 Alert.alert(
                     "Signup Failed!",
                     "This email address is already in use. Please use a different email.",
-                    [{text:"OK"}] 
+                    [{ text: "OK" }]
                 )
             } else {
                 Alert.alert(
                     "Signup Error!",
                     "An unexpected error occurred. Please try again later.",
-                    [{text:"OK"}] 
+                    [{ text: "OK" }]
                 )
             }
-            
+
         }
 
     }
@@ -138,7 +144,7 @@ const SignUp = () => {
 
                             <TouchableOpacity
                                 className="flex flex-row justify-center mb-5 p-3 items-center"
-                                onPress={() => router.push('/home')}
+                                onPress={handleGuest}
                             >
                                 <Text className="text-white font-semibold">Be a </Text>
                                 <Text className="text-base font-semibold underline text-[#f49b33]">

@@ -291,6 +291,7 @@ const Restaurant = () => {
 
                 <View className="flex-1">
                     <FindSlots
+                        restaurant={restaurant}
                         date={date}
                         selectedNumber={selectedNumber}
                         slots={slotsData}
